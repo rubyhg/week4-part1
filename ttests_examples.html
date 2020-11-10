@@ -369,7 +369,62 @@ summary {
 </div>
 
 
+<div id="confidence-intervals" class="section level2">
+<h2>1. Confidence intervals</h2>
+<pre class="r"><code>otter_length &lt;- c(38, 41, 50, 27, 32, 41, 48, 60, 43)
 
+t.test(otter_length)</code></pre>
+<pre><code>## 
+##  One Sample t-test
+## 
+## data:  otter_length
+## t = 12.932, df = 8, p-value = 1.21e-06
+## alternative hypothesis: true mean is not equal to 0
+## 95 percent confidence interval:
+##  34.69302 49.75142
+## sample estimates:
+## mean of x 
+##  42.22222</code></pre>
+<p>The mean length of sea otters is 42.22 inches with an sd of blah, and the 95% confidence interval is 34.69 to 49.75.</p>
+<p>That’s what this is saying - but when you look at the first part of the data, it is running this on a null value equal to 0. Obviously it is extremely unlikely that otter length of a random sample is 0.</p>
+</div>
+<div id="t-test-1-sample-t-test" class="section level2">
+<h2>2. T-test (1-sample t-test)</h2>
+<p>See a claim: mean otter length is 50 inches I want to change the null hypothesis to equal 50, not 0.</p>
+<pre class="r"><code>otter_test &lt;- t.test(x = otter_length, mu = 50)
+otter_test</code></pre>
+<pre><code>## 
+##  One Sample t-test
+## 
+## data:  otter_length
+## t = -2.3821, df = 8, p-value = 0.0444
+## alternative hypothesis: true mean is not equal to 50
+## 95 percent confidence interval:
+##  34.69302 49.75142
+## sample estimates:
+## mean of x 
+##  42.22222</code></pre>
+<p>SO what does 0.0444 mean? If the pop mean really is 50 inches, then there is a 4.44% chance that we could have taken a random sample from the population that has a mean that is at least as different from 50 as it is from our sample in either direction.</p>
+</div>
+<div id="two-sample-t-test" class="section level2">
+<h2>Two-sample t-test</h2>
+<pre class="r"><code>desert_bighorns &lt;- c(32, 44, 18, 26, 50, 33, 42, 20)
+sierra_bighorns &lt;- c(28, 31, 40, 42, 26, 29, 31)
+
+t.test(x = desert_bighorns, y = sierra_bighorns)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  desert_bighorns and sierra_bighorns
+## t = 0.14825, df = 10.913, p-value = 0.8849
+## alternative hypothesis: true difference in means is not equal to 0
+## 95 percent confidence interval:
+##  -9.653212 11.046069
+## sample estimates:
+## mean of x mean of y 
+##  33.12500  32.42857</code></pre>
+<p>This uses a Welch’s two sample t-test, which doesn’t assume variance</p>
+</div>
 
 
 

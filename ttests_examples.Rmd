@@ -9,3 +9,38 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## 1. Confidence intervals
+
+```{r}
+otter_length <- c(38, 41, 50, 27, 32, 41, 48, 60, 43)
+
+t.test(otter_length)
+```
+
+The mean length of sea otters is 42.22 inches with an sd of blah, and the 95% confidence interval is 34.69 to 49.75.
+
+That's what this is saying - but when you look at the first part of the data, it is running this on a null value equal to 0. Obviously it is extremely unlikely that otter length of a random sample is 0.
+
+## 2. T-test (1-sample t-test)
+
+See a claim: mean otter length is 50 inches
+I want to change the null hypothesis to equal 50, not 0.
+
+```{r}
+otter_test <- t.test(x = otter_length, mu = 50)
+otter_test
+```
+
+SO what does 0.0444 mean? If the pop mean really is 50 inches, then there is a 4.44% chance that we could have taken a random sample from the population that has a mean that is at least as different from 50 as it is from our sample in either direction. 
+
+## Two-sample t-test
+
+```{r}
+desert_bighorns <- c(32, 44, 18, 26, 50, 33, 42, 20)
+sierra_bighorns <- c(28, 31, 40, 42, 26, 29, 31)
+
+t.test(x = desert_bighorns, y = sierra_bighorns)
+```
+
+This uses a Welch's two sample t-test, which doesn't assume variance
+
