@@ -7,7 +7,11 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
 ```
+
+## PART 1
 
 ## 1. Confidence intervals
 
@@ -43,4 +47,78 @@ t.test(x = desert_bighorns, y = sierra_bighorns)
 ```
 
 This uses a Welch's two sample t-test, which doesn't assume variance
+
+## PART 2
+
+Exploring distributions and mean comparison
+
+```{r}
+compact_suv <- mpg %>% 
+  filter(class %in% c("compact","suv"))
+```
+
+### Exploratory data visualization
+
+Exploratory histograms:
+```{r}
+ggplot(data = compact_suv, aes(x = cty)) +
+  geom_histogram(bins = 15) +
+  facet_wrap(~class)
+```
+
+Now we're going to check out a quantile-quantile plot = the close this relationship is to linear, the closer my samples are to being normally distributed
+
+### Quantile-quantile (QQ) plot
+
+```{r}
+ggplot(data = compact_suv, aes(sample = cty)) +
+  geom_qq () +
+  facet_wrap(~class)
+```
+
+Next, we're going to find some descriptive summary statistics
+```{r}
+car_stats <- compact_suv %>% 
+  group_by(class) %>% 
+  summarize(mean_city = mean(cty), 
+            sd_city = sd(cty), 
+            n = n())
+```
+
+Why do we care about sample size? We know as long as the sample size is greater than 30, and because of the central limit theorem, we know the distribution can be normal and we can use a two sample t-test to compare means.
+
+
+### 2-sample t-test
+
+Create vectors containing observations for each sample (city gas mileage)
+
+```{r}
+compact_sample <- compact_suv %>% 
+  filter(class == "compact") %>% 
+  pull(cty)
+
+suv_sample <- compact_suv %>% 
+  filter(class == "suv") %>% 
+  pull(cty)
+
+t.test(x = compact_sample, y = suv_sample)
+```
+
+Why couldn't I use select and choose this column instead of pull? It would only store it as a variable, not a vector of values (which the t-test wants)
+
+So what did we learn - the difference between means is pretty big.
+
+Next, null hypothesis is that these samples are drawn from populations with the exact same mean.
+
+Our alt. hypothesis is that the samples are drawn from pops with different means.
+
+And the p-value is SO small that we can say there is an incredibly small chance that we could have randomly taken samples from two populations with the same mean and end up with samples at least as different as this.
+
+So we can reject the null hypothesis!
+
+
+
+
+
+
 
